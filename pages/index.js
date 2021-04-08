@@ -1,65 +1,89 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import useSWR from "swr";
+import { Box, Container, Wrap, WrapItem, Text, Center } from "@chakra-ui/react";
+import {
+  Video,
+  Transformation,
+  CloudinaryContext,
+  Placeholder,
+} from "cloudinary-react";
+import AwesomeSlider from "react-awesome-slider";
+import "react-awesome-slider/dist/styles.css";
 
 export default function Home() {
+  const { data, error } = useSWR("/api/getAllVideos");
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+
   return (
-    <div className={styles.container}>
+    <Box overflow="hidden" pb="3rem" bg="gray.100" px="1rem" minH="100vh">
+      {" "}
       <Head>
-        <title>Create Next App</title>
+        <title> Next.js Video Gallery </title>
         <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </Head>{" "}
+      <Container>
+        {" "}
+        <Text
+          as="h1"
+          fontWeight="semibold"
+          mb="1rem"
+          textAlign="center"
+          fontSize="4xl"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+          Next.js Video Gallery
+        </Text>
+      </Container>
+      <Wrap spacing="1rem" justify="center">
+        {data !== undefined &&
+          data.resources.map((video) => (
+            <WrapItem
+              key={video.public_id}
+              boxShadow="base"
+              rounded="20px"
+              overflow="hidden"
+              _hover={{ boxShadow: "dark-lg" }}
+            >
+              <Video
+                publicId={video.public_id}
+                cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}
+                secure="true"
+                controls
+                fallbackContent="Your browser does not support HTML5 video tags."
+                format="webm"
+              >
+                <Transformation width="640" crop="scale" />
+              </Video>
+            </WrapItem>
+          ))}
+      </Wrap>
+      <Container maxW="container.md" my="2rem">
+        <Text
+          fontWeight="semibold"
+          mb="1rem"
+          textAlign="center"
+          textDecoration="underline"
+          fontSize="3xl"
+        >
+          Video Gallery with Awesome Slider
+        </Text>
+        <Box>
+          <AwesomeSlider>
+            {data !== undefined &&
+              data.resources.map((video) => (
+                <div key={video.public_id}>
+                  <Video
+                    publicId={video.public_id}
+                    cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD}
+                    secure="true"
+                    controls
+                  ></Video>
+                </div>
+              ))}
+          </AwesomeSlider>
+        </Box>
+      </Container>
+    </Box>
+  );
 }
