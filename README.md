@@ -1,3 +1,8 @@
+![Screenshot_2021-04-08 Next js Video Gallery](https://user-images.githubusercontent.com/45850882/114010805-25a9fd80-9882-11eb-98dc-0b77f864cd5e.png)
+
+A Video Gallery built with [Next.js](https://nextjs.org/) using [Cloudinary](https://cloudinary.com/) and [React Awesome Slider ](https://www.npmjs.com/package/react-awesome-slider).
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
